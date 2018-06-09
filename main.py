@@ -40,20 +40,29 @@ def get_all_links(page):
         else:
             return links
 
-def crawl_web(page):
-    tocrawl = [page]
+def crawl_web(seed, max_depth = 1000):
+    tocrawl = [seed]
     crawled = []
+    next_depth = []
+    depth = 0
 
-    while tocrawl:
+    while tocrawl and depth <= max_depth:
         page = tocrawl.pop()
+
         if page not in crawled:
-            union(tocrawl, get_all_links(get_page(page)))
+            union(next_depth, get_all_links(get_page(page)))
             crawled.append(page)
             print(page)
+
+        if not tocrawl:
+            tocrawl, next_depth = next_depth, []
+            depth = depth + 1
+
     return crawled
+
 
 seed =('https://xkcd.com/353/')
 #seed =('https://yandex.ru')
 
-print(crawl_web(seed))
+print(crawl_web(seed, 3))
 
